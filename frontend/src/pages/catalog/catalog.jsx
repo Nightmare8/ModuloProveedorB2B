@@ -20,7 +20,9 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 import { ColorModeContext, tokens } from "../../theme.js";
 import { useTheme } from '@mui/material/styles';
-
+//Redux state
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from '../../state/authSlice.js';
 const filterProducts = (products) => {
   const uniquesNames = new Set();
   const filteredProducts = [];
@@ -51,8 +53,7 @@ const getImageProduct = (name) => {
 function Catalog() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  console.log(colors)
-  console.log(theme)
+  const dispatch = useDispatch();
   //Obtener todos los productos desde la base de datos
   const [products, setProducts] = useState([]);
   useEffect(() => {
@@ -70,7 +71,11 @@ function Catalog() {
   }
   const addCart = (product, quantity) => {
     //The goal is change the page with information of the product
-    
+    console.log("cantidad a agregar", quantity)
+    dispatch(addProduct({
+      product, 
+      quantity
+    }))
   }
   //No se deben repetir los productos
   return (
@@ -91,6 +96,7 @@ function Catalog() {
               md = {4}
               lg = {2}
               xl = {1}
+              key={index}
             >
               <Card
                 sx = {{
@@ -133,7 +139,9 @@ function Catalog() {
                   </IconButton>
                   <IconButton
                      color='primary'
-                     
+                    onClick = {() =>
+                      addCart(item, 1)
+                    }
                   >
                     <AddShoppingCartIcon/>
                   </IconButton>

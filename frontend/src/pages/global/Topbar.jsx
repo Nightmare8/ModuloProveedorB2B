@@ -9,6 +9,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AppsIcon from '@mui/icons-material/Apps';
 import HelpIcon from '@mui/icons-material/Help';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import CartDrawer from "../../components/CartDrawer";
 //Menu
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "../../state/authSlice";
 import { Link} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { grey } from "@mui/material/colors";
+
 
 const StyledTabs = styled((Tabs))(({ theme }) => ({
   ".MuiTabs-indicator": {
@@ -49,80 +50,12 @@ function Topbar() {
   }
   //Drawer component
   const [stateOpen, setStateOpen] = useState(false);
-  const DrawerComponent = () => {
-    return (
-      <Box>
-        <Drawer
-          anchor="right"
-          open={stateOpen}
-          onClose={toogleDrawer(false)}
-        >
-          <Box
-            display={'flex'}
-            flexDirection={'column'}
-            justifyContent={'space-between'}
-            sx = {{
-              width: 'min(100%, 500px)',
-              height: '95%',
-            }}
-          >
-            <Box
-              display={'flex'}
-              justifyContent={'flex-start'}
-              paddingRight={50}
-              paddingTop={2}
-              paddingLeft={2}
-              sx = {{
-                backgroundColor: grey,
-              }}
-            >
-              <Typography variant="h4" fontWeight={'bold'} color={colors.blueAccent[200]}>
-                Resumen
-              </Typography>
-            </Box>
-            <Stack>
-              {/* La idea es dejar aqui los productos y el total */}
-            </Stack>
-            <Stack
-              direction={'row'}
-              justifyContent={'space-around'}
-              alignItems={'center'}
-            >
-              <Button variant="contained"
-                sx = {{
-                  backgroundColor: theme.palette.button.main,
-                  height: '50%',
-                  padding: '20px 50px',
-                  fontSize: '1rem',
-                }}
-              >
-                Iniciar Pago
-              </Button>
-              <Button variant="contained" 
-                sx = {{
-                  backgroundColor: theme.palette.button.main,
-                  height: '50%',
-                  padding: '20px 50px',
-                  fontSize: '1rem',
-                }}
-              >
-                Ir al carro
-              </Button>
-            </Stack>
-          </Box>
-        </Drawer>
-      </Box>
-    )
-  }
-  const toogleDrawer = (open) => () => {
-    // if (
-    //   event.type === 'keydown' &&
-    //   ((event).key === 'Tab' ||
-    //     (event).key === 'Shift')
-    // ) {
-    //   return;
-    // }
-    // setStateOpen(open);
+  
+  const toogleDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')){
+      return;
+    }
+    setStateOpen(open);
   }
   
   //Menu component 
@@ -225,7 +158,9 @@ function Topbar() {
         <IconButton
           size="large"
         >
-          <Badge badgeContent={12} color="error">
+          <Badge badgeContent={
+            cart === null ? 0 : cart.length
+          } color="error">
             <IconButton
               onClick={toogleDrawer(true)}
             >
@@ -234,7 +169,7 @@ function Topbar() {
           </Badge>
         </IconButton>
         {/* Drawer component */}
-        <DrawerComponent />
+        <CartDrawer stateOpen={stateOpen} toogleDrawer={toogleDrawer} />
         <IconButton
           id="setting"
           aria-controls={open3 ? 'setting' : undefined}

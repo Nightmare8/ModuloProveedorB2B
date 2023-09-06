@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     user: null,
     token: null,
-    cart: null,
+    cart: [ ],
 }
 
 export const authSlice = createSlice({
@@ -23,7 +23,17 @@ export const authSlice = createSlice({
             state.token = null;
         },
         addProduct: (state, action) => {
-            state.cart.push(action.payload.product);
+            //Have to verify if the product is already in the cart}
+            console.log("action", action.payload.product)
+            if (state.cart.filter((item) => item.name === action.payload.product.name).length > 0){
+                state.cart.forEach((item) => {
+                    if (item.name === action.payload.product.name){
+                        item.quantity += 1
+                    }
+                })
+            } else {
+                state.cart.push(action.payload);
+            }
         },
         removeProduct: (state, action) => {
             state.cart = state.cart.filter((item) =>
@@ -51,9 +61,12 @@ export const authSlice = createSlice({
                 }
             })
         },
+        clearCart: (state) => {
+            state.cart = [ ];
+        }
     }
 });
 
-export const { setLogin, updateLogin, setLogout, addProduct, removeProduct, updateCart, sumProduct, restProduct} = authSlice.actions;
+export const { setLogin, updateLogin, setLogout, addProduct, removeProduct, updateCart, sumProduct, restProduct, clearCart} = authSlice.actions;
 
 export default authSlice.reducer;
