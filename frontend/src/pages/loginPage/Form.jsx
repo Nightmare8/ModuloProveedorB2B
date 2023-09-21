@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Dropzone from "react-dropzone";
 
-import { setLogin } from "./../../state/authSlice";
+import { setLogin } from "../../state/slices/authSlice.js";
 const initialValuesLogin = {
     email: "",
     password: "",
@@ -45,6 +45,7 @@ function Form() {
   const [pageType, setPageType] = useState("login");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log(setLogin)
   let isLogin = pageType === "login";
   let isRegister = pageType === "register";
   const theme = useTheme();

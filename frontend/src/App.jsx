@@ -14,18 +14,23 @@ import Catalog from './pages/catalog/catalog.jsx';
 import Registers from './pages/registers/registers.jsx';
 import Inventory from './pages/inventory/inventory.jsx';
 import Company from './pages/company/company.jsx';
-//Redux
-import { useSelector } from "react-redux";
 import AlertCompany from './components/AlertCompany.jsx';
 import Start from './pages/start/start.jsx';
+//Redux
+import { useSelector } from "react-redux";
 
 
 
 function App() {
   const [theme, colorMode] = useMode();
-  const user = useSelector((state) => state.user);
-  const isAuth = Boolean(useSelector((state) => state.token));
-  
+  const user = useSelector((state) => state.auth.user);
+  const isAuth = Boolean(useSelector((state) => state.auth.token));
+  console.log("user", user)
+  console.log("isAuth", isAuth)
+  useEffect(() => {
+    console.log("el valor del estado ha cambiado")
+    console.log("isAuth", isAuth)
+  },[isAuth])
   return (
     <ColorModeContext.Provider value={colorMode}>
       <BrowserRouter>

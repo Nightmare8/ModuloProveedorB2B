@@ -22,7 +22,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as yup from "yup";
 import StepperStyled from './stepperStyled.jsx';
 import { useDispatch } from 'react-redux';
-import {updateLogin} from '../../state/authSlice';
+import { updateLogin } from '../../state/slices/authSlice.js';
 import { Navigate } from 'react-router-dom';
 const initialValues = {
     rut: "",

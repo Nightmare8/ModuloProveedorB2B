@@ -22,7 +22,7 @@ import { ColorModeContext, tokens } from "../../theme.js";
 import { useTheme } from '@mui/material/styles';
 //Redux state
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct } from '../../state/authSlice.js';
+import { addProduct } from './../../state/slices/cartSlice.js';
 const filterProducts = (products) => {
   const uniquesNames = new Set();
   const filteredProducts = [];
@@ -71,7 +71,6 @@ function Catalog() {
   }
   const addCart = (product, quantity) => {
     //The goal is change the page with information of the product
-    console.log("cantidad a agregar", quantity)
     dispatch(addProduct({
       product, 
       quantity

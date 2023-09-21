@@ -1,6 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit"
+import { combineReducers, configureStore } from "@reduxjs/toolkit"
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import {composeWithDevTools} from "redux-devtools-extension"
 
-import { authSlice } from "./authSlice.js";
+import authSlice from "./slices/authSlice.js";
+import cartSlice from "./slices/cartSlice.js";
+console.log("cartSlice", cartSlice)
 import storage from 'redux-persist/lib/storage';
 import storageSession from 'redux-persist/lib/storage/session';
 import {
@@ -19,11 +23,16 @@ const persistConfig = {
     storage: storageSession,
     version: 1,
 }
+const rootReducer =  combineReducers({
+    auth: authSlice,
+    cart: cartSlice,
+})
 
-const persistedReducer = persistReducer(persistConfig, authSlice.reducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
     reducer: persistedReducer,
+    devTools: composeWithDevTools(),
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: {
             ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]

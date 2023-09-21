@@ -1,20 +1,56 @@
 import React from 'react'
-import { Drawer, Box, Button, Typography, useTheme, Stack, Card, CardMedia, CardContent } from '@mui/material'
+import { Drawer, Box, Button, Typography, useTheme, Stack, Card, CardMedia, CardContent, CardHeader, IconButton, TextField } from '@mui/material'
 import { grey } from "@mui/material/colors";
 import { tokens, ColorModeContext } from '../theme';
-import { clearCart } from '../state/authSlice';
+//Redux
+import { removeProduct, sumProduct, restProduct, clearCart } from '../state/slices/cartSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
-//Images
+//Icons
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+//Imagenes productos
 import ImagenTelefono from '../assets/products/telefono.jpg';
+import ImagenCamara from '../assets/products/camara.jpg';
+import ImagenNotebook from '../assets/products/notebook.jpg';
+import ImagenTablet from '../assets/products/tablet.jpg';
+import ImagenConsola from '../assets/products/consolas.jpg';
+
+
+const getRightImage = (name) => {
+    if (name === 'telefono') {
+        return ImagenTelefono;
+    } else if (name === 'camara') {
+        return ImagenCamara;
+    } else if (name === 'notebook') {
+        return ImagenNotebook;
+    } else if (name === 'tablet') {
+        return ImagenTablet;
+    } else if (name === 'consola') {
+        return ImagenConsola;
+    }
+}
 
 function CartDrawer({ stateOpen, toogleDrawer }) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
-    const cart = useSelector((state) => state.cart);
-    console.log("cart", cart)
+    const cart = useSelector((state) => state.cart.cart);
     const clear = () => {
         dispatch(clearCart());
+    }
+
+    const removeItem = (item) => {
+        dispatch(removeProduct(item));
+    }
+    const restItem = (item, quantity) => {
+        if (quantity > 1) {
+            dispatch(restProduct(item));
+        } else{
+            dispatch(removeProduct(item));
+        }
+    }
+    const sumItem = (item) => {
+        dispatch(sumProduct(item));
     }
     return (
         <Box>
@@ -47,63 +83,99 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                         </Typography>
                         <Stack
                             direction={'column'}
-                            spacing={2}
-                            
+                            spacing={1}
                         >
                             {/* La idea es dejar aqui los productos y el total */}
                             {cart.map((item, index) => (
                                 <Card
                                     key={index}
-                                    sx={{
-                                        display: 'flex',
+                                    sx = {{
+                                        boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
                                     }}
                                 >
-                                    <CardMedia
-                                        component={'img'}
-                                        sx={{
-                                            width: '100%',
-                                            maxWidth: 100,
-                                        }}
-                                        alt='Product'
-                                        image={ImagenTelefono}
+                                    <CardHeader
+                                        title={item.product.nombre}
+                                        subheader={item.product.detalle}
                                     />
                                     <Box
-                                        width={'100%'}
-                                    >
+                                        sx = {{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                        }}
+                                    > 
+                                        <Stack
+                                            direction={'column'}
+                                            alignContent={'center'}
+                                        >
+                                            <CardMedia
+                                                component={'img'}
+                                                sx={{
+                                                    width: '100%',
+                                                    maxWidth: 100,
+                                                    borderRadius: 1,
+                                                }}
+                                                alt='Product'
+                                                image={getRightImage(item.product.categoria)}
+                                            />
+                                            <Button
+                                                sx = {{
+                                                    color: theme.palette.button.main,
+                                                }}
+                                                onClick={
+                                                    () => removeItem(item)
+                                                }
+                                            >
+                                                Eliminar
+                                            </Button>
+                                        </Stack>
                                         <CardContent
-                                            sx = {{
+                                            sx={{
                                                 flex: '1 0 auto'
                                             }}
                                         >
-                                            <Typography component={'div'} variant='h4' fontWeight={'bold'}>
-                                                {item.product.nombre}
-                                            </Typography>
-                                            <Typography variant='h5'>
-                                                {item.product.detalle}
-                                            </Typography>
-                                            <Stack 
+                                            <Stack
                                                 direction={'row'}
                                                 justifyContent={'space-between'}
                                             >
                                                 <Typography variant='h4'>
                                                     Precio normal
                                                 </Typography>
-                                                <Typography variant='h4' fontWeight={'bold'}>
+                                                <Typography variant='h5' fontWeight={'bold'} color={theme.palette.button.main}>
                                                     $ {item.product.precio}
                                                 </Typography>
                                             </Stack>
-                                            <Stack
-                                                direction={'row'}
-                                                justifyContent={'space-between'}
+                                            <Box
+                                                sx = {{
+                                                    paddingTop: 1,
+                                                }}
                                             >
-                                                
-                                                <Button>
-                                                    Eliminar
-                                                </Button>
-                                                {/* Stack para botones de accion */}
-                                            </Stack>
+                                                <IconButton
+                                                    onClick={() => restItem(item, item.quantity)}
+                                                >
+                                                    <RemoveIcon />
+                                                </IconButton>
+                                                <TextField
+                                                    label="Cantidad"
+                                                    variant='outlined'
+                                                    value={item.quantity}
+                                                    type='number'
+                                                    sx={{
+                                                        width: 100,
+                                                        textAlign: 'center',
+                                                    }}
+                                                    size='small'
+                                                />
+                                                <IconButton
+                                                    onClick={() => sumItem(item)}
+                                                >
+                                                    <AddIcon />
+                                                </IconButton>
+                                            </Box>
+
                                         </CardContent>
+
                                     </Box>
+                                    
                                 </Card>
                             ))}
                         </Stack>
@@ -112,6 +184,7 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                         direction={'row'}
                         justifyContent={'space-around'}
                         alignItems={'center'}
+                        spacing={2}
                     >
                         <Button variant="contained"
                             sx={{

@@ -17,7 +17,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 //Redux state
 import { useDispatch, useSelector } from "react-redux";
-import { setLogout } from "../../state/authSlice";
+import { setLogout } from "../../state/slices/authSlice";
 import { Link} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -41,7 +41,7 @@ function Topbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state) => state.cart.cart);
   console.log("cart", cart)
   //Tab component
   const [value, setValue] = useState(0);
