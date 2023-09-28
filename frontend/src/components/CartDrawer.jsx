@@ -35,6 +35,7 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
     const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
     const cart = useSelector((state) => state.cart.cart);
+    console.log("cart", cart)
     const clear = () => {
         dispatch(clearCart());
     }
@@ -50,7 +51,12 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
         }
     }
     const sumItem = (item) => {
-        dispatch(sumProduct(item));
+        console.log("item", item)
+        if (item.product.stock > item.quantity){
+            dispatch(sumProduct(item));
+        } else{
+            alert("No hay mas stock de este producto");
+        }
     }
     return (
         <Box>

@@ -1,8 +1,12 @@
 import React from 'react'
+import { Box } from '@mui/material';
+
 
 function Registers() {
   return (
-    <div>Registers</div>
+    <Box>
+      <h1>Registers</h1>
+    </Box>
   )
 }
 

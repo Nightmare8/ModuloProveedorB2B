@@ -12,7 +12,7 @@ import Geography from './pages/geography/geography.jsx';
 import Team from './pages/team/team.jsx';
 import Catalog from './pages/catalog/catalog.jsx';
 import Registers from './pages/registers/registers.jsx';
-import Inventory from './pages/inventory/inventory.jsx';
+import Inventory from './pages/inventory/index.jsx';
 import Company from './pages/company/company.jsx';
 import AlertCompany from './components/AlertCompany.jsx';
 import Start from './pages/start/start.jsx';

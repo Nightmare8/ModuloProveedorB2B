@@ -6,7 +6,17 @@ import Supplier from "../models/Supplier.js";
 
 export const getProducts = async (req, res) => {
     try {
-        const products = await Product.find({});
+        const {rutCompany} = req.params;
+        console.log(rutCompany);
+        let products;
+        if (rutCompany){
+            console.log("entro aca")
+            const company = await Company.findOne({rut: rutCompany}).lean();
+            console.log("company", company)
+            products = await Product.find({companyOwner: company._id});
+        } else{
+            products = await Product.find({});
+        }
         res.status(200).json(products);
     } catch (error) {
         res.status(500).json({error: error.message})

@@ -30,7 +30,7 @@ function Company() {
   };
 
   //Get the dats of the company, and pass to the other components
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.auth.user);
   const [companyDats, setCompanyDats] = useState({
     nombre: '',
     rut: '',

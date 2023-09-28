@@ -135,6 +135,13 @@ export const themeSettings = (mode) => {
             secondary: {
               main: colors.greenAccent[500],
             },
+            action: {
+              active: colors.grey[500],
+              hover: colors.grey[700],
+              selected: colors.grey[700],
+              disabled: colors.grey[500],
+              disabledBackground: colors.grey[900],
+            },
             neutral: {
               dark: colors.grey[700],
               main: colors.grey[500],

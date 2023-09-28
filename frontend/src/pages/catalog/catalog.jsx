@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Grid, IconButton, Typography } from '@mui/material';
+import { Box, Grid, IconButton, Snackbar, Stack, Typography } from '@mui/material';
 import {productRoutes} from '../../api/config.js';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -26,12 +26,20 @@ import { addProduct } from './../../state/slices/cartSlice.js';
 const filterProducts = (products) => {
   const uniquesNames = new Set();
   const filteredProducts = [];
+  console.log("products", products)
   products.forEach((product) => {
-    if(!uniquesNames.has(product.nombre)){
-      uniquesNames.add(product.nombre);
-      filteredProducts.push(product);
+    if (product.estado === 'Disponible'){
+      if(!uniquesNames.has(product.nombre) ){
+        uniquesNames.add(product.nombre);
+        product.stock = 1;
+        filteredProducts.push(product);
+      } else{
+        const index = filteredProducts.findIndex((item) => item.nombre === product.nombre);
+        filteredProducts[index].stock++;
+      }
     }
   });
+  console.log("filteredProducts", filteredProducts)
   return filteredProducts;
 }
 
@@ -56,6 +64,8 @@ function Catalog() {
   const dispatch = useDispatch();
   //Obtener todos los productos desde la base de datos
   const [products, setProducts] = useState([]);
+  //Snack bar state
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     fetch(productRoutes.get, {
       method: 'GET',
@@ -69,12 +79,19 @@ function Catalog() {
   const setFavourite = (product) =>{
     console.log("product", product)
   }
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  }
   const addCart = (product, quantity) => {
     //The goal is change the page with information of the product
     dispatch(addProduct({
       product, 
       quantity
     }))
+    setOpen(true)
   }
   //No se deben repetir los productos
   return (
@@ -121,7 +138,10 @@ function Catalog() {
                   <Typography variant={'h5'}>
                     {item.nombre} {item.marca} {item.modelo}
                   </Typography>
-                  <Rating name="read-only" value={item.calificacion} readOnly />
+                  <Typography variant={'h5'}>
+                    Disponibles: {item.stock}
+                  </Typography>
+                  {/* <Rating name="read-only" value={item.calificacion} readOnly /> */}
                 </CardContent>
                 <CardActions
                   sx = {{
@@ -150,6 +170,11 @@ function Catalog() {
           ))}
         </Grid>
       </Box>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Producto agregado al carrito" />
     </Box>
   )
 }

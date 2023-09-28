@@ -15,7 +15,8 @@ import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Dropzone from "react-dropzone";
-
+//Routes
+import { userRoutes } from "../../api/config.js";
 import { setLogin } from "../../state/slices/authSlice.js";
 const initialValuesLogin = {
     email: "",
@@ -61,7 +62,7 @@ function Form() {
   const [alertSeverity, setAlertSeverity] = useState("");
 
   const register = async (values, onSubmitProps) => {
-    const savedUserResponse = await fetch("http://localhost:3000/auth/register", {
+    const savedUserResponse = await fetch(userRoutes.register, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
@@ -80,7 +81,7 @@ function Form() {
   }
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch("http://localhost:3000/auth/login", {
+    const loggedInResponse = await fetch(userRoutes.login, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),

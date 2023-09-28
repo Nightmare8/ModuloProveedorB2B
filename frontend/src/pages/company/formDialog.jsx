@@ -24,6 +24,8 @@ import StepperStyled from './stepperStyled.jsx';
 import { useDispatch } from 'react-redux';
 import { updateLogin } from '../../state/slices/authSlice.js';
 import { Navigate } from 'react-router-dom';
+//Routes
+import {companyRoutes} from '../../api/config.js' 
 const initialValues = {
     rut: "",
     razonSocial: "",
@@ -125,7 +127,7 @@ function FormDialog({ open, handleClose }) {
     }
     const addCompany = async (values, onSubmitProps) => {
         values.emailUser = user.email;
-        const savedCompanyResponse = await fetch('http://localhost:3000/company/register', {
+        const savedCompanyResponse = await fetch(companyRoutes.registerCompany, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
