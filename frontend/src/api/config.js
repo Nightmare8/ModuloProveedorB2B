@@ -10,6 +10,7 @@ export const userRoutes = {
 }
 
 export const supplierRoutes = {
+    get: 'http://localhost:3000/supplier/',
     register: 'http://localhost:3000/supplier/register',
 }
 

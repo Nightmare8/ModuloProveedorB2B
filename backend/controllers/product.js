@@ -7,13 +7,12 @@ import Supplier from "../models/Supplier.js";
 export const getProducts = async (req, res) => {
     try {
         const {rutCompany} = req.params;
-        console.log(rutCompany);
         let products;
         if (rutCompany){
             console.log("entro aca")
             const company = await Company.findOne({rut: rutCompany}).lean();
             console.log("company", company)
-            products = await Product.find({companyOwner: company._id});
+            products = await Product.find({companyOwner: company._id, estado: "stock"});
         } else{
             products = await Product.find({});
         }

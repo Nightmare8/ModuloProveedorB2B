@@ -16,7 +16,9 @@ const productSchema = new Schema({
     //Seccion de precios
     //Monto Neto
     precio: {type: Number, required:true},
-    estado: {type: String, required:true}, //Disponible, Vendido, En Oferta, Stock
+    estado: {type: String, required:true}, 
+    //Disponible, Vendido, En Oferta, Stock
+    // Stock significa en inventario agregado por la compania
     rating: {type: Number, default: 0},
     //La compañia dueña del producto, puede ser 
     companyOwner: {type:mongoose.Schema.Types.ObjectId, ref:'CompanyOwner'}, 

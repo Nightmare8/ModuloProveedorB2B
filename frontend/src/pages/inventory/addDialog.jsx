@@ -1,4 +1,3 @@
-import React from 'react'
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -8,7 +7,7 @@ import { Box, Button, MenuItem, TextField } from '@mui/material';
 import { Form, Formik } from "formik";
 import * as yup from "yup";
 //React
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
 //Mui theme
@@ -16,7 +15,8 @@ import { tokens } from "../../theme.js";
 import { useTheme } from '@mui/material/styles';
 //Routes and API
 import { productRoutes } from "../../api/config.js";
-import { Typography } from '@mui/material';
+import {supplierRoutes} from "../../api/config.js"; 
+import { Typography, Stack } from '@mui/material';
 const productSchema = yup.object().shape({
     codigo: yup.string().required("El código es requerido"),
     nombre: yup.string().required("El nombre es requerido"),
@@ -31,7 +31,7 @@ const productSchema = yup.object().shape({
     precio: yup.number().required("El precio es requerido"),
     cantidad: yup.number().required("La cantidad es requerida"),
     estado: yup.string(),
-    companyOwner: yup.string().required("La empresa es requerida"),
+    companyOwner: yup.string(),
     supplier: yup.string(),
 })
 
@@ -54,11 +54,20 @@ const initialValues = {
 }
 
 function AddDialog({ open, handleClose }) {
-    const dispatch = useDispatch();
     const user = useSelector(state => state.auth.user);
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-
+    const [suppliers, setSuppliers] = useState([]);
+    initialValues.companyOwner = user.company;
+    //Obtain all suppliers
+    useEffect(() => {
+        fetch(supplierRoutes.get, {
+            method: 'GET',
+        }).then(response => response.json()).
+        then(data => {
+            setSuppliers(data);
+        }).catch(error => console.log(error));
+    },[])
     const addProduct = async (values, onSubmitProps) => {
         values.companyOwner = user.company;
         const savedProductResponse = await fetch(productRoutes.register, {
@@ -72,15 +81,20 @@ function AddDialog({ open, handleClose }) {
         if (!savedProduct.error) {
             onSubmitProps.resetForm();
             handleClose();
+        } else{
+            console.log("error", savedProduct.error);
         }
     }
 
     const handleFormSubmit = async (values, onSubmitProps) => {
+        console.log("values", values);
+        console.log("entro al form")
+        values.estado = 'stock'
         await addProduct(values, onSubmitProps);
     }
 
     return (
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'lg'}>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth={'md'}>
             <DialogTitle id="form-dialog-title">
                 <Typography variant="h4" sx={{ color: colors.primary }}>
                     Agregar Producto
@@ -111,59 +125,182 @@ function AddDialog({ open, handleClose }) {
 
                         }) => (
                             <Form onSubmit={handleSubmit}>
-
                                 <Box
+                                    component={'form'}
                                     sx={{
-                                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                        '& .MuiTextField-root': { m: 1 },
                                     }}
+                                    noValidate
                                 >
-                                    <TextField
-                                        label='Código'
-                                        name='codigo'
-                                        value={values.codigo}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={Boolean(touched.codigo && errors.codigo)}
-                                        multiline
-                                    />
-                                    <TextField
-                                        label='Nombre'
-                                        name='nombre'
-                                        value={values.nombre}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={Boolean(touched.nombre && errors.nombre)}
-                                        multiline
-                                    />
-                                    <TextField
-                                        label='SKU'
-                                        name='sku'
-                                        value={values.sku}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={Boolean(touched.sku && errors.sku)}
-                                        multiline
-                                    />
-                                    <TextField
-                                        label='Lote'
-                                        name='lote'
-                                        value={values.lote}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        error={Boolean(touched.lote && errors.lote)}
-                                        multiline
-                                    />
-                                    <TextField
-                                        label='Categoría'
-                                        name='categoria'
-                                        value={values.categoria}
-                                        error={Boolean(touched.categoria && errors.categoria)}
-                                        multiline
-                                        select
-                                        defaultValue={'consolas'}>
-                                            <MenuItem value={'consolas'}>Consolas</MenuItem>
-                                            
+                                    <Stack direction={'row'}  >
+                                        <TextField
+                                            label='Código'
+                                            name='codigo'
+                                            value={values.codigo}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.codigo && errors.codigo)}
+                                        />
+                                        <TextField
+                                            label='Nombre'
+                                            name='nombre'
+                                            value={values.nombre}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.nombre && errors.nombre)}
+                                        />
+                                        <TextField
+                                            label='SKU'
+                                            name='sku'
+                                            value={values.sku}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.sku && errors.sku)}
+                                        />
+                                        <TextField
+                                            label='Lote'
+                                            name='lote'
+                                            value={values.lote}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.lote && errors.lote)}
+                                            multiline
+                                        />
+                                    </Stack>
+                                    <Stack direction={'row'} >
+                                        <TextField
+                                            sx={{
+                                                width: '24%',
+                                            }}
+                                            label='Categoría'
+                                            name='categoria'
+                                            value={values.categoria}
+                                            onChange={handleChange}
+                                            error={Boolean(touched.categoria && errors.categoria)}
+                                            multiline
+                                            select>
+                                                <MenuItem value={'consolas'}>Consolas</MenuItem>
+                                                <MenuItem value={'telefonos'}>Teléfonos</MenuItem>
+                                                <MenuItem value={'notebook'}>
+                                                    Notebook
+                                                </MenuItem>
+                                                <MenuItem value={'tablet'}>
+                                                    Tablet
+                                                </MenuItem>
+                                                <MenuItem value={'camaras'}>
+                                                    Cámaras
+                                                </MenuItem>
                                         </TextField>
+                                        <TextField
+                                            label='Subcategoría'
+                                            name='subCategoria'
+                                            value={values.subCategoria}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.subCategoria && errors.subCategoria)}
+                                            multiline>
+                                            {/* Agregar posibles sub categorias de cada categoriaa */}
+                                        </TextField>
+                                        <TextField
+                                            label='Marca'
+                                            name='marca'
+                                            value={values.marca}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.marca && errors.marca)}
+                                            multiline />
+                                        <TextField
+                                            label='Modelo'
+                                            name='modelo'
+                                            value={values.modelo}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.modelo && errors.modelo)}
+                                            multiline />
+                                    </Stack>
+                                    <Stack direction={'row'}>
+                                        <TextField
+                                            label='Detalle'
+                                            name='detalle'
+                                            value={values.detalle}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.detalle && errors.detalle)}
+                                            multiline
+                                            sx={{
+                                                width: '40%',
+                                            }}
+                                        />
+                                        <TextField
+                                            label='Color'
+                                            name='color'
+                                            value={values.color}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.color && errors.color)}
+                                            multiline
+                                            sx={{
+                                                width: '10%',
+                                            }}
+                                        >
+                                        
+                                        </TextField>
+                                        <TextField
+                                            // suppliers
+                                            label='Proveedor'
+                                            name='supplier'
+                                            select
+                                            value={values.supplier}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.supplier && errors.supplier)}
+                                            multiline
+                                            sx ={{
+                                                width: '40%',
+                                            }}
+                                        >
+                                            {suppliers.map((suppliers) => (
+                                                <MenuItem key={suppliers._id} value={suppliers.rut}>
+                                                    {suppliers.nombre}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Stack>
+                                    <Stack direction={'row'}>
+                                        <TextField
+                                            id='standard-number'
+                                            label='Precio'
+                                            name='precio'
+                                            type='number'
+                                            value={values.precio}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.precio && errors.precio)}
+                                            variant='standard'
+                                            sx = {{
+                                                width: '50%'
+                                            }}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
+                                         <TextField
+                                            label='Cantidad'
+                                            name='cantidad'
+                                            type='number'
+                                            value={values.cantidad}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            error={Boolean(touched.cantidad && errors.cantidad)}
+                                            variant='standard'
+                                            sx = {{
+                                                width: '50%'
+                                            }}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
+                                    </Stack>
                                 </Box>
                                 <Button
                                     sx={{
