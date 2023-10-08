@@ -12,10 +12,11 @@ export const getProducts = async (req, res) => {
             console.log("entro aca")
             const company = await Company.findOne({rut: rutCompany}).lean();
             console.log("company", company)
-            products = await Product.find({companyOwner: company._id, estado: "stock"});
+            products = await Product.find({companyOwner: company._id, estado: "stock"}).populate("supplier");
         } else{
             products = await Product.find({});
         }
+        console.log("products en servidor", products)
         res.status(200).json(products);
     } catch (error) {
         res.status(500).json({error: error.message})
@@ -77,7 +78,7 @@ export const registerProduct = async (req, res) => {
                 // companyOwner: company._id;
                 datos.companyOwner = company._id;
             }
-            if (supplier){
+            if (!supplier == ''){
                 const supplierOwner = await Supplier.findOne({rut: supplier});
                 datos.supplier = supplierOwner._id;
             }

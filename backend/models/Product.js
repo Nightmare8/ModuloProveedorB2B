@@ -20,6 +20,9 @@ const productSchema = new Schema({
     //Disponible, Vendido, En Oferta, Stock
     // Stock significa en inventario agregado por la compania
     rating: {type: Number, default: 0},
+    //Atributos de tiempo, para registros
+    fechaCreacion: {type: Date, default: Date.now},
+    fechaModificacion: {type: Date, default: Date.now},
     //La compañia dueña del producto, puede ser 
     companyOwner: {type:mongoose.Schema.Types.ObjectId, ref:'CompanyOwner'}, 
     supplier: {type:mongoose.Schema.Types.ObjectId, ref:'Supplier'},

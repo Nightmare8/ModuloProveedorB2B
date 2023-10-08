@@ -1,28 +1,22 @@
 import { useEffect, useState } from 'react';
-import React from 'react';
-import Header from '../../components/Header'
+//Mui theme
 import { ColorModeContext, tokens } from "../../theme.js";
 import { useTheme } from '@mui/material/styles';
+//Componets
 import { Box, Button, Stack } from '@mui/material';
-//Icons
-import AddBoxIcon from '@mui/icons-material/AddBox';
-//Componentes
-import AddDialog from './addDialog';
-import TabBody from '../../components/TabBody';
-//Api
-import { productRoutes } from "../../api/config.js";
+import Header from '../../components/Header'
 //Redux
 import { useSelector } from "react-redux";
-
+//Icons
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 const filterProducts = (products) => {
     const uniquesNames = new Set();
     const filteredProducts = [];
-    console.log("products", products)
     products.forEach((product) => {
         if (product.estado === 'stock') {
-            if (!uniquesNames.has(product.codigo)) {
-                uniquesNames.add(product.codigo);
+            if (!uniquesNames.has(product.nombre)) {
+                uniquesNames.add(product.nombre);
                 product.stock = 1;
                 filteredProducts.push(product);
             } else {
@@ -31,75 +25,55 @@ const filterProducts = (products) => {
             }
         }
     });
-    console.log("filteredProducts", filteredProducts)
     return filteredProducts;
 }
 
 const headCells = [
     {
-        id: 'sku',
+        id: 'codigo',
         numeric: false,
-        label: 'SKU',
-    },
-    {
+        label: 'Codigo',
+    },{
         id: 'nombre',
         numeric: false,
         label: 'Nombre',
-    }, {
-        id: 'categoria',
-        numeric: false,
-        label: 'Categoría',
-    }, {
-        id: 'precio',
-        numeric: false,
-        label: 'Precio',
     },
     {
-        id: 'stock',
+        id: 'total',
         numeric: false,
-        label: 'Stock',
+        label: 'Precio Total',
+    },
+    {
+        id: 'cantidadProductos',
+        numeric: false,
+        label: 'Cantidad',
     },
     {
         id: 'proveedor',
         numeric: false,
         label: 'Proveedor',
+    },{
+        id: 'fecha',
+        numeric: false,
+        label: 'Fecha',
+    },{
+        id: 'estadoPago',
+        numeric: false,
+        label: 'Estado Pago',
+    },{
+        id: 'estadoEnvio',
+        numeric: false,
+        label: 'Estado Envio',
     },
 ]
-
-
-function Inventory() {
+function Register() {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     //User 
     const user = useSelector((state) => state.auth.user);
     //Stock
     const [rows, setRows] = useState([]);
-    //Use effect
-    const url = productRoutes.get + user.company;
-    console.log(rows)
-    useEffect(() => {
-        fetch(url, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            console.log("response", response)
-            return response.json()
-        }).then(data => {
-            console.log("data", data)
-            setRows(filterProducts(data));
-        }).catch(error => console.log(error));
-    }, [])
-
-    //Form Dialog
-    const [open, setOpen] = useState(false);
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
+    //Obtain de registers
     return (
         <Box
             sx={{
@@ -114,45 +88,41 @@ function Inventory() {
                 justifyContent={'space-between'}
             >
                 {/* Agregar producto */}
-                <Header title='Inventario' subTitle={'De Empresa'} />
+                <Header title='Registros' subTitle={'De Empresa'} />
                 <Stack direction={'row'} spacing={2}>
                     <Button
                         variant="contained"
                         startIcon={<AddBoxIcon />}
-                        onClick={handleClickOpen}
                         sx={{
                             backgroundColor: theme.palette.button.main,
                             height: '50%',
                         }}
                     >
-                        Agregar Producto
+                        Cargar registros
                     </Button>
                     <Button
                         variant="contained"
                         startIcon={<AddBoxIcon />}
-                        onClick={handleClickOpen}
                         sx={{
                             backgroundColor: theme.palette.button.main,
                             height: '50%',
                         }}
                     >
-                        Toma de Inventario
+                        Editar registros
                     </Button>
 
                 </Stack>
-                <AddDialog open={open} handleClose={handleClose} />
             </Box>
-            {/* Listado Inventario */}
             <Box
                 display={'flex'}
                 justifyContent={'space-between'}
                 paddingTop={1}
                 width={'100%'}
             >
-                <TabBody rows={rows} setRows ={setRows} headCellsAux={headCells}/>
+                
             </Box>
         </Box>
     )
 }
 
-export default Inventory
+export default Register

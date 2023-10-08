@@ -14,9 +14,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { tokens } from "../../theme.js";
 import { useTheme } from '@mui/material/styles';
 //Routes and API
-import { productRoutes } from "../../api/config.js";
+import { companyRoutes, productRoutes } from "../../api/config.js";
 import {supplierRoutes} from "../../api/config.js"; 
+
 import { Typography, Stack } from '@mui/material';
+//Functions
+const transformUpperCase = (value) => {
+    //Transform first letter
+    return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
 const productSchema = yup.object().shape({
     codigo: yup.string().required("El código es requerido"),
     nombre: yup.string().required("El nombre es requerido"),
@@ -57,8 +64,10 @@ function AddDialog({ open, handleClose }) {
     const user = useSelector(state => state.auth.user);
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const [company, setCompany] = useState({});
     const [suppliers, setSuppliers] = useState([]);
     initialValues.companyOwner = user.company;
+    console.log("compain", company)
     //Obtain all suppliers
     useEffect(() => {
         fetch(supplierRoutes.get, {
@@ -66,6 +75,16 @@ function AddDialog({ open, handleClose }) {
         }).then(response => response.json()).
         then(data => {
             setSuppliers(data);
+        }).catch(error => console.log(error));
+        //Have to obtain categories of company
+        fetch(companyRoutes.getCompany, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ rut: user.company })
+        }).then(response => response.json()).then(data => {
+            setCompany(data);
         }).catch(error => console.log(error));
     },[])
     const addProduct = async (values, onSubmitProps) => {
@@ -179,17 +198,16 @@ function AddDialog({ open, handleClose }) {
                                             error={Boolean(touched.categoria && errors.categoria)}
                                             multiline
                                             select>
-                                                <MenuItem value={'consolas'}>Consolas</MenuItem>
-                                                <MenuItem value={'telefonos'}>Teléfonos</MenuItem>
-                                                <MenuItem value={'notebook'}>
-                                                    Notebook
-                                                </MenuItem>
-                                                <MenuItem value={'tablet'}>
-                                                    Tablet
-                                                </MenuItem>
-                                                <MenuItem value={'camaras'}>
-                                                    Cámaras
-                                                </MenuItem>
+                                                {/* just show the categories of company */}
+                                                {company.datos.productTypes.map((category) => {
+                                                    return (
+                                                        <MenuItem key={category.name} value={category.name}>
+                                                            {/* have to show the first letter in uppercase */}
+                                                            {transformUpperCase(category.name)}
+                                                        </MenuItem>
+                                                    )
+                                                })
+                                                }
                                         </TextField>
                                         <TextField
                                             label='Subcategoría'
@@ -259,6 +277,9 @@ function AddDialog({ open, handleClose }) {
                                                 width: '40%',
                                             }}
                                         >
+                                            <MenuItem value={''}>
+                                                Ninguno
+                                            </MenuItem>
                                             {suppliers.map((suppliers) => (
                                                 <MenuItem key={suppliers._id} value={suppliers.rut}>
                                                     {suppliers.nombre}

@@ -11,7 +11,7 @@ import Faq from './pages/faq/faq.jsx';
 import Geography from './pages/geography/geography.jsx';
 import Team from './pages/team/team.jsx';
 import Catalog from './pages/catalog/catalog.jsx';
-import Registers from './pages/registers/registers.jsx';
+import Registers from './pages/registers/index.jsx';
 import Inventory from './pages/inventory/index.jsx';
 import Company from './pages/company/company.jsx';
 import AlertCompany from './components/AlertCompany.jsx';
@@ -25,12 +25,7 @@ function App() {
   const [theme, colorMode] = useMode();
   const user = useSelector((state) => state.auth.user);
   const isAuth = Boolean(useSelector((state) => state.auth.token));
-  console.log("user", user)
-  console.log("isAuth", isAuth)
-  useEffect(() => {
-    console.log("el valor del estado ha cambiado")
-    console.log("isAuth", isAuth)
-  },[isAuth])
+  
   return (
     <ColorModeContext.Provider value={colorMode}>
       <BrowserRouter>
