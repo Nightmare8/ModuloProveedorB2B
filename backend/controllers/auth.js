@@ -20,6 +20,7 @@ export const register = async (req, res) => {
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
         const emailUser = await User.findOne({email: email});
+        console.log("emailUser", emailUser)
         if (emailUser) {
             res.status(400).json({error: "El correo ya esta registrado"})
         }else{

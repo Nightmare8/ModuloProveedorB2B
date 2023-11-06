@@ -1,7 +1,6 @@
 import './App.css'
-import { useEffect, useState } from 'react';
 //Components
-import { CssBaseline, ThemeProvider, Alert, AlertTitle } from "@mui/material";
+import { CssBaseline, ThemeProvider} from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import LoginPage from './pages/loginPage/index.jsx';
@@ -14,7 +13,6 @@ import Catalog from './pages/catalog/catalog.jsx';
 import Registers from './pages/registers/index.jsx';
 import Inventory from './pages/inventory/index.jsx';
 import Company from './pages/company/company.jsx';
-import AlertCompany from './components/AlertCompany.jsx';
 import Start from './pages/start/start.jsx';
 //Redux
 import { useSelector } from "react-redux";
@@ -23,7 +21,6 @@ import { useSelector } from "react-redux";
 
 function App() {
   const [theme, colorMode] = useMode();
-  const user = useSelector((state) => state.auth.user);
   const isAuth = Boolean(useSelector((state) => state.auth.token));
   
   return (

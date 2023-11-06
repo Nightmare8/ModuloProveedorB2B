@@ -1,3 +1,4 @@
+
 export const companyRoutes = {
     getCompany: 'http://localhost:3000/company/',
     getUserCompany: 'http://localhost:3000/company/users',
@@ -17,4 +18,9 @@ export const supplierRoutes = {
 export const productRoutes = {
     get: 'http://localhost:3000/product/',
     register: 'http://localhost:3000/product/register'
+}
+
+export const pythonRoutes = {
+    userRegisters : 'http://localhost:3000/apiPython/user/',
+    getRecommendations : 'http://localhost:3000/apiPython/recommendations/', //:cantidad/:categoria
 }

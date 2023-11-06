@@ -14,6 +14,8 @@ import companyRoutes from "./routes/company.js";
 import supplierRoutes from './routes/supplier.js'
 import purchaseRoutes from "./routes/purchase.js";
 import productRoutes from "./routes/product.js";
+import mercadoLibreRoutes from "./routes/mercadoLibre.js";
+import apiPythonRoutes from "./routes/apiPython.js";
 //Configurations
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -61,19 +63,17 @@ app.use('/company', companyRoutes);
 app.use('/supplier', supplierRoutes);
 app.use('/purchase', purchaseRoutes);
 app.use('/product', productRoutes);
-
+app.use('/mercadolibre', mercadoLibreRoutes);
+app.use('/apiPython', apiPythonRoutes);
 //Configure the data base
 const PORT =  process.env.PORT || 3000;
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }). then(() => {
+    console.log("connected to mongodb", process.env.MONGO_URL)
     app.listen(PORT, () => console.log(`Server running on port: ${PORT}`))
 }).catch((error) => {
     console.log("Problem connecting to mongodb")
     console.log(error.message)}
 )
-
-app.get('/api/example', (req, res) => {
-    res.json({ message: 'Hello World!' });
-});

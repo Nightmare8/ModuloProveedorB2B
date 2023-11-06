@@ -27,13 +27,14 @@ function Dashboard() {
   return (
     <Box
       paddingX={2}
+      paddingY={2}
     >
       <Box
         display='flex'
         justifyContent={'space-between'}
         alignContent={'center'}
       >
-        <Header title='Dashboard' subTitle='Welcome to your dashboard'/>
+        <Header title='Panel de control' subTitle='Bienvenido a tu panel de control'/>
         <Box>
           <Button 
             variant="contained"

@@ -5,6 +5,7 @@ import Company from "../models/Company.js";
 //Register new company
 export const registerCompany = async (req, res) => {
     try {
+        console.log("entra a registrar compañia")
         const {
             rut,
             nombre,
@@ -30,7 +31,7 @@ export const registerCompany = async (req, res) => {
             consolas,
             camaras,
         } = req.body;
-
+        console.log("req body", req.body)
         const rutCompany = await Company.findOne({ rut: rut });
         if (rutCompany) {
             res.status(400).json({ error: "El rut ya esta registrado" });

@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { tokens } from "../../theme.js";
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from "react-redux";
@@ -113,7 +113,7 @@ function FormDialog({ open, handleClose }) {
             companyName: companyName,
         }));
     }
-    const user = useSelector((state) => state.user);
+    const user = useSelector((state) => state.auth.user);
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
 
@@ -126,6 +126,7 @@ function FormDialog({ open, handleClose }) {
         nextStep();
     }
     const addCompany = async (values, onSubmitProps) => {
+        console.log("user", user);
         values.emailUser = user.email;
         const savedCompanyResponse = await fetch(companyRoutes.registerCompany, {
             method: 'POST',
@@ -194,9 +195,6 @@ function FormDialog({ open, handleClose }) {
                                 touched,
                                 errors,
                                 setFieldValue,
-                                isSubmitting,
-                                resetForm,
-                                isValid
                             }) => (
 
                                 <form onSubmit={handleSubmit}>
@@ -213,7 +211,7 @@ function FormDialog({ open, handleClose }) {
                                                 <Typography variant='h5' fontWeight={'bold'}
                                                     sx={{
                                                         alignSelf: 'center',
-                                                        marginBottom: '1rem',
+                                                        marginBottom: '3rem',
                                                     }}
                                                 >
                                                     Seleccione su tipo de Industria

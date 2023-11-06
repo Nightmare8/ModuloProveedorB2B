@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles';
 //Componets
 import { Box, Button, Stack } from '@mui/material';
 import Header from '../../components/Header'
+import DialogRegister from './dialogRegister.jsx';
 //Redux
 import { useSelector } from "react-redux";
 //Icons
@@ -74,6 +75,10 @@ function Register() {
     //Stock
     const [rows, setRows] = useState([]);
     //Obtain de registers
+    //Dialog for charge registers
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     return (
         <Box
             sx={{
@@ -97,6 +102,7 @@ function Register() {
                             backgroundColor: theme.palette.button.main,
                             height: '50%',
                         }}
+                        onClick={handleOpen}
                     >
                         Cargar registros
                     </Button>
@@ -110,8 +116,9 @@ function Register() {
                     >
                         Editar registros
                     </Button>
-
+                    
                 </Stack>
+                <DialogRegister open={open} onClose={handleClose} />
             </Box>
             <Box
                 display={'flex'}
