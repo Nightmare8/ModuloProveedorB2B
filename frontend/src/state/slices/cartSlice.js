@@ -11,7 +11,8 @@ export const cartSlice = createSlice({
         addProduct: (state, action) => {
             //Have to verify if the product is already in the cart}
             const product = state.cart.find((item) => {
-                return item.product.nombre === action.payload.product.nombre
+                console.log("item", item)
+                return item.product.idProducto === action.payload.product.idProducto
             } 
             );
             console.log("product", product)
@@ -19,7 +20,7 @@ export const cartSlice = createSlice({
             if (product) {
                 console.log("el producto ya estaba incluido")
                 state.cart.forEach((item) => {
-                    if (item.name === action.payload.name) {
+                    if (item.product.idProducto === action.payload.product.idProducto) {
                         item.quantity += 1
                     }
                 })
@@ -30,25 +31,25 @@ export const cartSlice = createSlice({
         },
         removeProduct: (state, action) => {
             //Have to remove the selected product from the cart
-            state.cart = state.cart.filter((item) => item.product.nombre !== action.payload.product.nombre);
+            state.cart = state.cart.filter((item) => item.product.idProducto !== action.payload.product.idProducto);
         },
         updateCart: (state, action) => {
             state.cart.forEach((item) => {
-                if (item.name === action.payload.product.name) {
+                if (item.product.idProducto === action.payload.product.idProducto) {
                     item.quantity = action.payload.product.quantity
                 }
             });
         },
         sumProduct: (state, action) => {
             state.cart.forEach((item) => {
-                if (item.name === action.payload.product.name) {
+                if (item.product.idProducto === action.payload.product.idProducto) {
                     item.quantity += 1
                 }
             })
         },
         restProduct: (state, action) => {
             state.cart.forEach((item) => {
-                if (item.name === action.payload.product.name) {
+                if (item.product.idProducto === action.payload.product.idProducto) {
                     item.quantity -= 1
                 }
             })

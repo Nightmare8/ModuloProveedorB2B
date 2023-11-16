@@ -23,4 +23,10 @@ export const productRoutes = {
 export const pythonRoutes = {
     userRegisters : 'http://localhost:3000/apiPython/user/',
     getRecommendations : 'http://localhost:3000/apiPython/recommendations/', //:cantidad/:categoria
+    getProducts: 'http://localhost:3000/apiPython/products',
+    getProductsCategories : 'http://localhost:3000/apiPython/productsCategorie',
+}
+
+export const purchaseRoutes = {
+    register: 'http://localhost:3000/purchase/register',
 }

@@ -1,7 +1,4 @@
-import mongoose from "mongoose";
 import axios from "axios";
-
-
 
 export const getRecommendation = async (req, res) => {
     try {

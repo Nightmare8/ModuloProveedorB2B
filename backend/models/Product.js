@@ -3,23 +3,31 @@ const {Schema} = mongoose;
 
 const productSchema = new Schema({
     _id: Schema.Types.ObjectId,
-    codigo: {type: String},//Codigo en el sistema, no igual al sku, definido por la empresa
-    nombre: {type: String, required: true}, //Segundo escalon
-    sku: {type: String, required: true, unique: true}, //Codigo de barras, dado por el proveedor 
-    lote: {type: String},
+    idProducto: {type: String, required: true},//Codigo en el sistema, no igual al sku, definido por la empresa
+    titulo: {type: String, required: true}, //Segundo escalon
     categoria: {type: String, required:true}, //Primer Escalon
-    subCategoria: {type: String}, //Sub categorias estandarizadas en el draw.io
-    marca: {type: String, required:true}, //Segundo Escalon
-    modelo: {type: String},
-    detalle: {type: String}, // Tercer Escalon
-    color: {type: String},
-    //Seccion de precios
-    //Monto Neto
+    descripcion: {type: String},
     precio: {type: Number, required:true},
-    estado: {type: String, required:true}, 
-    //Disponible, Vendido, En Oferta, Stock
-    // Stock significa en inventario agregado por la compania
-    rating: {type: Number, default: 0},
+    cantidad: {type: Number, required:true},
+    tags: {type: String},
+    imagen: {type: String},
+    link: {type: String},
+    region: {type: String},
+    ciudad: {type: String},
+    cantidadReviews: {type: Number},
+    unaEstrella: {type: Number},
+    dosEstrellas: {type: Number},
+    tresEstrellas: {type: Number},
+    cuatroEstrellas: {type: Number},
+    cincoEstrellas: {type: Number},
+    reviewPromedio: {type: Number},
+    opiniones: {type: String},
+    likes: {type: Number},
+    dislikes: {type: Number},
+    atributos: [{
+        nombre: {type: String},
+        valor: {type: String},
+    }],
     //Atributos de tiempo, para registros
     fechaCreacion: {type: Date, default: Date.now},
     fechaModificacion: {type: Date, default: Date.now},

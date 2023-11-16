@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import dotenv from "dotenv";
 import multer from "multer";
 import helmet from "helmet";
@@ -67,6 +67,7 @@ app.use('/mercadolibre', mercadoLibreRoutes);
 app.use('/apiPython', apiPythonRoutes);
 //Configure the data base
 const PORT =  process.env.PORT || 3000;
+//mongoose.disconnect();
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

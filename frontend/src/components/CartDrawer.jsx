@@ -1,5 +1,5 @@
 import React from 'react'
-import { Drawer, Box, Button, Typography, useTheme, Stack, Card, CardMedia, CardContent, CardHeader, IconButton, TextField } from '@mui/material'
+import { Drawer, Box, Button, Typography, useTheme, Stack, Card, CardMedia, CardContent, CardHeader, IconButton, TextField, Divider } from '@mui/material'
 import { grey } from "@mui/material/colors";
 import { tokens, ColorModeContext } from '../theme';
 //Redux
@@ -14,21 +14,78 @@ import ImagenCamara from '../assets/products/camara.jpg';
 import ImagenNotebook from '../assets/products/notebook.jpg';
 import ImagenTablet from '../assets/products/tablet.jpg';
 import ImagenConsola from '../assets/products/consolas.jpg';
+import ImagenCargadores from '../assets/products/cargadores.webp';
+import ImagenBaterias from '../assets/products/bateriasCelular.jpg';
+import ImagenDiscos from '../assets/products/discosSSD.webp';
 
+// const getRightImage = (name) => {
+//     if (name === 'telefono') {
+//         return ImagenTelefono;
+//     } else if (name === 'camara') {
+//         return ImagenCamara;
+//     } else if (name === 'notebook') {
+//         return ImagenNotebook;
+//     } else if (name === 'tablet') {
+//         return ImagenTablet;
+//     } else if (name === 'consola') {
+//         return ImagenConsola;
+//     }
+// }
 
-const getRightImage = (name) => {
-    if (name === 'telefono') {
-        return ImagenTelefono;
-    } else if (name === 'camara') {
-        return ImagenCamara;
-    } else if (name === 'notebook') {
-        return ImagenNotebook;
-    } else if (name === 'tablet') {
-        return ImagenTablet;
-    } else if (name === 'consola') {
-        return ImagenConsola;
+// const handleImageCategory = (category) => {
+//     if (category === 'MLC9240') {
+//         return ImagenCargadores;
+//     } else if (category === 'MLC5068') {
+//         return ImagenBaterias;
+//     } else if (category === 'MLC1672') {
+//         return ImagenDiscos;
+//     } else {
+//         return ImagenTelefono;
+//     }
+// }
+
+const handleStock = (stock) => {
+    if (stock == 1) {
+        return 50
+    } else if (stock == 50) {
+        return 100
+    } else if (stock == 100) {
+        return 150
+    } else if (stock == 150) {
+        return 200
+    } else if (stock == 200) {
+        return 250
+    } else if (stock == 250) {
+        return 300
+    } else if (stock == 500) {
+        return 5000
+    } else if (stock == 5000) {
+        return 50000
+    } else if (stock == 50000) {
+        return 99999
+    } else {
+        return 1
     }
 }
+
+const haveInfo = (item) => {
+    if (item.product.info) {
+        return item.product.info
+    } else {
+        return item.product
+    }
+}
+const calculateTotal = (cart) => {
+    let total = 0;
+    cart.forEach(item => {
+        total += haveInfo(item).precio * item.quantity;
+    });
+    return total;
+}
+const totalProducto = (item) => {
+    return haveInfo(item).precio * item.quantity;
+}
+
 
 function CartDrawer({ stateOpen, toogleDrawer }) {
     const theme = useTheme();
@@ -46,15 +103,17 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
     const restItem = (item, quantity) => {
         if (quantity > 1) {
             dispatch(restProduct(item));
-        } else{
+        } else {
             dispatch(removeProduct(item));
         }
     }
     const sumItem = (item) => {
         console.log("item", item)
-        if (item.product.stock > item.quantity){
+        const stock = handleStock(haveInfo(item).stock);
+        console.log("stock", stock)
+        if (stock > item.quantity) {
             dispatch(sumProduct(item));
-        } else{
+        } else {
             alert("No hay mas stock de este producto");
         }
     }
@@ -64,6 +123,7 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                 anchor="right"
                 open={stateOpen}
                 onClose={toogleDrawer(false)}
+                
             >
                 <Box
                     display={'flex'}
@@ -82,12 +142,14 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                         spacing={1}
                         sx={{
                             backgroundColor: grey,
+                            height: '100%',
                         }}
                     >
                         <Typography variant="h4" fontWeight={'bold'} color={colors.blueAccent[200]}>
                             Resumen
                         </Typography>
                         <Stack
+
                             direction={'column'}
                             spacing={1}
                         >
@@ -95,20 +157,19 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                             {cart.map((item, index) => (
                                 <Card
                                     key={index}
-                                    sx = {{
+                                    sx={{
                                         boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)',
                                     }}
                                 >
                                     <CardHeader
-                                        title={item.product.nombre}
-                                        subheader={item.product.detalle}
+                                        title={haveInfo(item).titulo}
                                     />
                                     <Box
-                                        sx = {{
+                                        sx={{
                                             display: 'flex',
                                             flexDirection: 'row',
                                         }}
-                                    > 
+                                    >
                                         <Stack
                                             direction={'column'}
                                             alignContent={'center'}
@@ -121,10 +182,10 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                                                     borderRadius: 1,
                                                 }}
                                                 alt='Product'
-                                                image={getRightImage(item.product.categoria)}
+                                                image={haveInfo(item).imagen}
                                             />
                                             <Button
-                                                sx = {{
+                                                sx={{
                                                     color: theme.palette.button.main,
                                                 }}
                                                 onClick={
@@ -144,14 +205,25 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                                                 justifyContent={'space-between'}
                                             >
                                                 <Typography variant='h4'>
-                                                    Precio normal
+                                                    Precio unidad
                                                 </Typography>
                                                 <Typography variant='h5' fontWeight={'bold'} color={theme.palette.button.main}>
-                                                    $ {item.product.precio}
+                                                    $ {haveInfo(item).precio}
+                                                </Typography>
+                                            </Stack>
+                                            <Stack
+                                                direction={'row'}
+                                                justifyContent={'space-between'}
+                                            >
+                                                <Typography variant='h4'>
+                                                    Precio total
+                                                </Typography>
+                                                <Typography variant='h5' fontWeight={'bold'} color={theme.palette.button.main}>
+                                                    $ {totalProducto(item)}
                                                 </Typography>
                                             </Stack>
                                             <Box
-                                                sx = {{
+                                                sx={{
                                                     paddingTop: 1,
                                                 }}
                                             >
@@ -181,9 +253,21 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                                         </CardContent>
 
                                     </Box>
-                                    
+
                                 </Card>
                             ))}
+                        </Stack>
+                        <Divider />
+                        <Stack
+                            direction={'row'}
+                            justifyContent={'space-between'}
+                            alignItems={'center'}>
+                            <Typography variant='h3'>
+                                Total
+                            </Typography>
+                            <Typography variant='h4' fontWeight={'bold'} color={theme.palette.button.main}>
+                                $ {calculateTotal(cart)}
+                            </Typography>
                         </Stack>
                     </Stack>
                     <Stack
