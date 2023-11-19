@@ -32,7 +32,7 @@ const productSchema = new Schema({
     fechaCreacion: {type: Date, default: Date.now},
     fechaModificacion: {type: Date, default: Date.now},
     //La compañia dueña del producto, puede ser 
-    companyOwner: {type:mongoose.Schema.Types.ObjectId, ref:'CompanyOwner'}, 
+    companyOwner: {type:mongoose.Schema.Types.ObjectId, ref:'Company'}, 
     supplier: {type:mongoose.Schema.Types.ObjectId, ref:'Supplier'},
 }, {timestamps: true});
 

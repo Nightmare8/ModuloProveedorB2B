@@ -46,8 +46,8 @@ const purchaseOrderSchema = new Schema({
     fechaOrden: { type: Date, required: true, default: Date.now() },
     fechaEntrega: { type: Date, required: true, default: Date.now() },
     //Datos de la compañia
-    companyBuyer: {type: mongoose.Schema.Types.ObjectId, ref:'CompanyBuyer'}, //Object ID de la compañia
-    companySeller: {type: mongoose.Schema.Types.ObjectId, ref: 'CompanySeller'}, //Object id al proveedor
+    companyBuyer: {type: mongoose.Schema.Types.ObjectId, ref:'Company'}, //Object ID de la compañia
+    companySeller: {type: mongoose.Schema.Types.ObjectId, ref: 'Supplier'}, //Object id al proveedor
 }, { timestamps: true });
 
 

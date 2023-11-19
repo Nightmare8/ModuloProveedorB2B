@@ -4,10 +4,10 @@ import PurchaseOrder from "../models/PurchaseOrder.js";
 import Company from "../models/Company.js";
 import Supplier from "../models/Supplier.js";
 import Product from "../models/Product.js";
+import axios from "axios";
 
 export const addPurchaseOrder = async (req, res) => {
     try {
-        console.log("entro aca")
         let {
             idProducto,
             titulo,
@@ -61,7 +61,6 @@ export const addPurchaseOrder = async (req, res) => {
             atributos
         } = req.body;
         
-        console.log("idVendedor", idVendedor)
         if (!metodoPago) {
             res.status(400).json({ error: "No hay metodo de pago" });
         }
@@ -81,7 +80,8 @@ export const addPurchaseOrder = async (req, res) => {
         }
         let supplier = await Supplier.findOne({idVendedor});
         //Verificar si existe el proveedor
-        console.log("supplier", supplier)
+        // console.log("supplier", supplier)
+        console.log("id producto", idProducto)
         if (!supplier){
             console.log("se crea el proveedor")
             //Si no existe, crear y guardarlo
@@ -108,7 +108,6 @@ export const addPurchaseOrder = async (req, res) => {
                 entregasRetrasadas,
                 cancelaciones
             });
-            console.log("newSupplier", newSupplier)
             const currentSupplier = await newSupplier.save();
             supplier = currentSupplier;
             if (!currentSupplier) {
@@ -202,9 +201,39 @@ export const addPurchaseOrder = async (req, res) => {
         if (!currentPurchaseOrder) {
             res.status(400).json({ error: "No se pudo crear la orden de compra" });
         }
-        res.status(201).json({ message: "Purchase Order added successfully" });
+        console.log("se creo la orden de compra, con id", currentPurchaseOrder._id)
+        //Agregar la orden de compra a la ruta de python
+        const url = process.env.LOCAL_PYTHON_URL + `addPurchaseOrder`;
+        //Set fetch call
+        const response = await axios.post(url, {idProducto, categoria});
+        //Transform the data to json object
+        
+        if (response.data != "success") {
+            res.status(400).json({ error: "No se pudo agregar la orden de compra a la ruta de python" });
+        }
+        res.status(201).json({status: 'success', message: "Purchase Order added successfully" });
     } catch (error) {
         console.log("error", error)
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export const getPurchaseOrders = async (req, res) => {
+    try {
+        const {rutCompany} = req.params;
+        //Chequear si existe la compañia
+        const currentCompany = await Company.findOne({rut: rutCompany});
+        if (!currentCompany){
+            res.status(400).json({message: "No existe la compañia"});
+        }
+
+        const purchaseOrders = await PurchaseOrder.find({companyBuyer: currentCompany._id}).populate('companySeller').lean();
+        console.log("purchaseOrders", purchaseOrders)
+        if (!purchaseOrders) {
+            res.status(400).json({ error: "No hay ordenes de compra" });
+        }
+        res.status(200).json(purchaseOrders);
+    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }

@@ -169,7 +169,7 @@ function Topbar() {
           </Badge>
         </IconButton>
         {/* Drawer component */}
-        <CartDrawer stateOpen={stateOpen} toogleDrawer={toogleDrawer} />
+        <CartDrawer stateOpen={stateOpen} setStateOpen={setStateOpen} toogleDrawer={toogleDrawer} />
         <IconButton
           id="setting"
           aria-controls={open3 ? 'setting' : undefined}

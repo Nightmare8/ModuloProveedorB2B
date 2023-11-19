@@ -225,7 +225,7 @@ function Catalog() {
   return (
     <Box
       paddingY={2}
-      paddingX={1}
+      paddingX={3}
       display={'flex'}
       flexDirection={'column'}
       gap={2}
@@ -399,29 +399,29 @@ function Catalog() {
                       </Typography>
                       {/* <Rating name="read-only" value={item.calificacion} readOnly /> */}
                     </CardContent>
-                    <CardActions
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <IconButton
-                        onClick={() =>
-                          setFavourite(item)
-                        }
-                      >
-                        <FavoriteBorderIcon />
-                      </IconButton>
-                      <IconButton
-                        color='primary'
-                        onClick={() =>
-                          addCart(item, 1)
-                        }
-                      >
-                        <AddShoppingCartIcon />
-                      </IconButton>
-                    </CardActions>
                   </CardActionArea>
+                  <CardActions
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <IconButton
+                      onClick={() =>
+                        setFavourite(item)
+                      }
+                    >
+                      <FavoriteBorderIcon />
+                    </IconButton>
+                    <IconButton
+                      color='primary'
+                      onClick={() =>
+                        addCart(item, 1)
+                      }
+                    >
+                      <AddShoppingCartIcon />
+                    </IconButton>
+                  </CardActions>
                 </Card>
               </Grid>
             ))

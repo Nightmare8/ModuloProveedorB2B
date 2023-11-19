@@ -7,18 +7,22 @@ import Supplier from "../models/Supplier.js";
 export const getProducts = async (req, res) => {
     try {
         const {rutCompany} = req.params;
-        let products;
-        if (rutCompany){
-            console.log("entro aca")
-            const company = await Company.findOne({rut: rutCompany}).lean();
-            console.log("company", company)
-            products = await Product.find({companyOwner: company._id, estado: "stock"}).populate("supplier");
-        } else{
-            products = await Product.find({});
+        //Chequear si existe la compañia
+        console.log("rutCompany", rutCompany)
+        const company = await Company.findOne({rut: rutCompany});
+        console.log("company", company)
+        if (!company){
+            res.status(400).json({message: "No existe la compañia"});
         }
-        console.log("products en servidor", products)
+        //Si existe, buscar los productos de esa compañia
+        const products = await Product.find({companyOwner: company._id}).populate("supplier").lean();
+        if (!products){
+            res.status(400).json({message: "No existen productos para esta compañia"});
+        }
+        console.log("products", products)
         res.status(200).json(products);
     } catch (error) {
+        console.log("error", error)
         res.status(500).json({error: error.message})
     }
 }

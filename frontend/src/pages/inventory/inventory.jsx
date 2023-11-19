@@ -37,12 +37,12 @@ const filterProducts = (products) => {
 
 const headCells = [
     {
-        id: 'sku',
+        id: 'idProducto',
         numeric: false,
         label: 'SKU',
     },
     {
-        id: 'nombre',
+        id: 'titulo',
         numeric: false,
         label: 'Nombre',
     }, {
@@ -55,7 +55,7 @@ const headCells = [
         label: 'Precio',
     },
     {
-        id: 'stock',
+        id: 'cantidad',
         numeric: false,
         label: 'Stock',
     },
@@ -76,6 +76,7 @@ function Inventory() {
     const [rows, setRows] = useState([]);
     //Use effect
     const url = productRoutes.get + user.company;
+    console.log("url", url)
     console.log(rows)
     useEffect(() => {
         fetch(url, {
@@ -88,7 +89,7 @@ function Inventory() {
             return response.json()
         }).then(data => {
             console.log("data", data)
-            setRows(filterProducts(data));
+            setRows(data);
         }).catch(error => console.log(error));
     }, [])
 

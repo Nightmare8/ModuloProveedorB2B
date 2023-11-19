@@ -1,4 +1,3 @@
-import React from 'react'
 import { Drawer, Box, Button, Typography, useTheme, Stack, Card, CardMedia, CardContent, CardHeader, IconButton, TextField, Divider } from '@mui/material'
 import { grey } from "@mui/material/colors";
 import { tokens, ColorModeContext } from '../theme';
@@ -17,7 +16,7 @@ import ImagenConsola from '../assets/products/consolas.jpg';
 import ImagenCargadores from '../assets/products/cargadores.webp';
 import ImagenBaterias from '../assets/products/bateriasCelular.jpg';
 import ImagenDiscos from '../assets/products/discosSSD.webp';
-
+import {useNavigate} from 'react-router-dom';
 // const getRightImage = (name) => {
 //     if (name === 'telefono') {
 //         return ImagenTelefono;
@@ -87,7 +86,7 @@ const totalProducto = (item) => {
 }
 
 
-function CartDrawer({ stateOpen, toogleDrawer }) {
+function CartDrawer({ stateOpen, setStateOpen, toogleDrawer }) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const dispatch = useDispatch();
@@ -116,6 +115,12 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
         } else {
             alert("No hay mas stock de este producto");
         }
+    }
+    const navigate = useNavigate();
+    const handlePago = () => {
+        setStateOpen(false);
+        navigate('/checkout');
+        console.log("handlePago")
     }
     return (
         <Box>
@@ -219,7 +224,7 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                                                     Precio total
                                                 </Typography>
                                                 <Typography variant='h5' fontWeight={'bold'} color={theme.palette.button.main}>
-                                                    $ {totalProducto(item)}
+                                                   {item.quantity} x $ {totalProducto(item)}
                                                 </Typography>
                                             </Stack>
                                             <Box
@@ -249,11 +254,8 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                                                     <AddIcon />
                                                 </IconButton>
                                             </Box>
-
                                         </CardContent>
-
                                     </Box>
-
                                 </Card>
                             ))}
                         </Stack>
@@ -294,6 +296,7 @@ function CartDrawer({ stateOpen, toogleDrawer }) {
                                 padding: '20px 50px',
                                 fontSize: '1rem',
                             }}
+                            onClick={handlePago}
                         >
                             Iniciar Pago
                         </Button>

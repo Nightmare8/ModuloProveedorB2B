@@ -189,6 +189,16 @@ function EnhancedTableRow(props) {
                 </TableCell>
             )
         }
+    } else if (headCells.id === 'companySeller') {
+        if (row.companySeller){
+            return (
+                <TableCell
+                    align='left'
+                >
+                    {row.companySeller.nombre}
+                </TableCell>
+            )
+        }
     } else {
         return (
             <TableCell
@@ -290,8 +300,6 @@ function TabBody({ rows, setRows, headCellsAux }) {
         ),
         [order, orderBy, page, rowsPerPage]
     )
-
-    const [products, setProducts] = useState([]);
 
     //Dialog
     const [open, setOpen] = useState(false);

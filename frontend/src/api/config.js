@@ -28,5 +28,6 @@ export const pythonRoutes = {
 }
 
 export const purchaseRoutes = {
-    register: 'http://localhost:3000/purchase/register',
+    buyProduct: 'http://localhost:3000/purchase/register',
+    getPurchase: 'http://localhost:3000/purchase/get/',
 }

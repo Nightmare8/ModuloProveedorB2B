@@ -14,6 +14,7 @@ import Registers from './pages/registers/index.jsx';
 import Inventory from './pages/inventory/index.jsx';
 import Company from './pages/company/company.jsx';
 import Start from './pages/start/start.jsx';
+import Checkout from './pages/checkout/checkout.jsx';
 //Redux
 import { useSelector } from "react-redux";
 
@@ -43,6 +44,7 @@ function App() {
                 <Route path='/inventory' element={<Inventory/>}/>
                 <Route path='/team' element={<Team/>}/>   
                 <Route path='/company' element={<Company />}/>
+                <Route path='/checkout' element={<Checkout/>}/>
                 <Route path='/faq' element={<Faq/>}/>
                 <Route path='/geography' element={<Geography/>}/>
                 <Route path='*' element={<Navigate to='/'/>}/>
